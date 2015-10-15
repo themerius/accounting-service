@@ -5,4 +5,12 @@ a microservice architecture.
 
 ## Run
 
+1. You need a (STOMP) broker like Apache ActiveMQ Apollo
+2. Automatically setup and run this application
+
     ./activator run
+
+3. You can use the python script to fire some sample messages
+3a. Maybe you must install some dependencies `pip install stompest==2.1.6`
+
+    python write_mock.py

@@ -53,6 +53,12 @@ class Application extends Controller {
           x.getKey.toString -> x.getValue.toString
         ).toMap
 
+        val (digit, unitName) = header("unit").split(" ") match {
+          case Array(digit) => (digit.toDouble, "undefined")
+          case Array(digit, unitName) => (digit.toDouble, unitName)
+          case _ => (0.0, "undefined")
+        }
+
         val (orderNr, ordererAgent) = header("tracking-nr").split("@") match {
           case Array(orderNr, ordererAgent) => (orderNr, ordererAgent)
           case _ => ("undefiend", "undefined")
@@ -61,7 +67,7 @@ class Application extends Controller {
         val tuple = (
           ordererAgent, orderNr,
           header("timestamp").toLong, header("event"),
-          header("agent"), 0.01 * header("unit").toDouble
+          header("agent"), 0.01 * digit
         )
 
         ordererAgentSet = Set(ordererAgent) ++ ordererAgentSet

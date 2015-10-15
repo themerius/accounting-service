@@ -64,7 +64,7 @@ while True:
         'agent': 'MockInstance',
         'tracking-nr': str(uuid.uuid4()) + "@" + users[random.randrange(3)],
         'timestamp': int(time.time()),
-        'unit': random.randrange(9) + 1
+        'unit': str(random.randrange(9) + 1) + " ms"
     }
     print "Sending to " + destination
     client.send(destination=destination, body=body[0], headers=headers)
