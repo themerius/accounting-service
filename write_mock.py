@@ -57,12 +57,17 @@ while True:
     #time.sleep(1)  # delay in secs
     body = []
     body.append("Not needed...")
-    users = {0: "einstein", 1: "newton", 2: "anonymous"}
+    macaroons = {
+        0: "MDAxM2xvY2F0aW9uIEZyb2RvCjAwMThpZGVudGlmaWVyIDE2ZGQyMDA4CjAwMmZzaWduYXR1cmUg5zJooxjv4WDzm5roqZLdywmtDrAmZYDSWGL1HZJCysUK",
+        1: "MDAxNWxvY2F0aW9uIEdhbmRhbGYKMDAxOGlkZW50aWZpZXIgMTZkZDIwMDgKMDAyZnNpZ25hdHVyZSDnMmijGO_hYPObmuipkt3LCa0OsCZlgNJYYvUdkkLKxQo",
+        2: "MDAxNWxvY2F0aW9uIGludmFsaWQKMDAxN2lkZW50aWZpZXIgaW52YWxpZAowMDJmc2lnbmF0dXJlIHTf4xArAyyHMTD_Ig2dJdl1qrFtazf7mTo5zZgQutgBCg",
+        3: "NOT PARSEABLE"
+    }
     headers = {
         'transformation': 'TEXT',
         'event': 'MockQuery',
         'agent': 'MockInstance',
-        'tracking-nr': str(uuid.uuid4()) + "@" + users[random.randrange(3)],
+        'tracking-nr': macaroons[random.randrange(4)],
         'timestamp': int(time.time()),
         'unit': str(random.randrange(9) + 1) + " ms"
     }

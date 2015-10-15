@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
 libraryDependencies += "org.apache.geronimo.specs" % "geronimo-jms_1.1_spec" % "1.1.1"
 libraryDependencies += "org.fusesource.stompjms" % "stompjms-client" % "1.19"
 
+libraryDependencies += "com.github.nitram509" % "jmacaroons" % "0.3.1"
+
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 // Play provides two styles of routers, one expects its actions to be injected, the

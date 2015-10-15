@@ -10,6 +10,12 @@ a microservice architecture.
 
     ./activator run
 
+Optional with vendorkey, broker or topic
+
+    ./activator run -Dvendorkey=scai.bio.dev \
+                    -Dtopic=/topic/billing \
+                    -Dbroker=tcp://localhost:61613
+
 3. You can use the python script to fire some sample messages
 3a. Maybe you must install some dependencies `pip install stompest==2.1.6`
 
