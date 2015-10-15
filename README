@@ -1,0 +1,8 @@
+# Accounting Service
+
+This is a simple service for doing some accounting within
+a microservice architecture.
+
+## Run
+
+    ./activator run
