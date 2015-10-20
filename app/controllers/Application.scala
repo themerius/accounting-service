@@ -3,6 +3,11 @@ package controllers
 import play.api._
 import play.api.mvc._
 
+import play.api.data._
+import play.api.data.Forms._
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+
 import org.fusesource.stomp.jms._
 import javax.jms._
 
@@ -23,6 +28,8 @@ import org.fusesource.stomp.client.Stomp
 import com.github.nitram509.jmacaroons.MacaroonsBuilder
 import com.github.nitram509.jmacaroons.MacaroonsVerifier
 import com.github.nitram509.jmacaroons.verifier.TimestampCaveatVerifier
+
+case class IssueRequest(userId: String, expirationDate: String)
 
 class Application extends Controller {
 
@@ -108,6 +115,27 @@ class Application extends Controller {
     ).toMap
 
     Ok(views.html.main("Accounting")(head.size, stats))
+  }
+
+  val issuingForm = Form(
+    mapping(
+      "userId" -> text,
+      "expirationDate" -> text
+    )(IssueRequest.apply)(IssueRequest.unapply)
+  )
+
+  def issuing = Action {
+    Ok(views.html.issuing(issuingForm.fill(IssueRequest("Bob", "2020-01-01T00:00"))))
+  }
+
+  def issuingResult = Action { implicit request =>
+    val issueRequest = issuingForm.bindFromRequest.get
+    val userId = s"scaiview.com/users/${issueRequest.userId}"
+    val dewdrop = MacaroonsBuilder.create(userId, sharedSecret, java.util.UUID.randomUUID.toString)
+    val macaroon = MacaroonsBuilder.modify(dewdrop)
+      .add_first_party_caveat(s"time < ${issueRequest.expirationDate}")
+      .getMacaroon
+    Ok(macaroon.serialize)
   }
 
 }

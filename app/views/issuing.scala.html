@@ -1,23 +1,20 @@
-@(title: String)(content: Int, stats: Map[String, Any])
+@(userForm: Form[IssueRequest])(implicit messages: Messages)
 
 <!DOCTYPE html>
 
 <html lang="en">
     <head>
-        <title>@title</title>
+        <title>Accounting: Issue Tracking Numbers</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
-        <h1>Current data</h1>
-        <ul>
-        @stats.map { stat =>
-          <li>@stat._1: @{"%.2f".format(stat._2)} €</li>
+        <h1>Issue a Tracking Number</h1>
+        @helper.form(action = routes.Application.issuingResult()) {
+          @helper.inputText(userForm("userId"))
+          @helper.inputText(userForm("expirationDate"))
+          <button type="submit" name="action">Giv!</button>
         }
-        </ul>
-        <small>Events: @content<small>
-        <br />
-        <small><a href="/issuing">Issue Tracking Numbers</a></small>
     </body>
 </html>
