@@ -69,6 +69,11 @@ class Application extends Controller {
           case _ => (0.0, "undefined")
         }
 
+        val multiplier = unitName match {
+          case "ms" => 0.001
+          case _ => 0.01
+        }
+
         // Macaroon based tracking-nr
         val validated = try {
           val macaroon = MacaroonsBuilder.deserialize(header("tracking-nr"))
@@ -86,7 +91,7 @@ class Application extends Controller {
         val tuple = (
           validated._1, validated._2,
           header("timestamp").toLong, header("event"),
-          header("agent"), 0.01 * digit
+          header("agent"), multiplier * digit
         )
 
         ordererAgentSet = Set(tuple._1) ++ ordererAgentSet
