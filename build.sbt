@@ -18,6 +18,8 @@ libraryDependencies += "org.fusesource.stompjms" % "stompjms-client" % "1.19"
 
 libraryDependencies += "com.github.nitram509" % "jmacaroons" % "0.3.1"
 
+libraryDependencies += "com.hierynomus" % "sshj" % "0.13.0"
+
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 // Play provides two styles of routers, one expects its actions to be injected, the

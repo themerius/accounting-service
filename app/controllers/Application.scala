@@ -29,7 +29,10 @@ import com.github.nitram509.jmacaroons.MacaroonsBuilder
 import com.github.nitram509.jmacaroons.MacaroonsVerifier
 import com.github.nitram509.jmacaroons.verifier.TimestampCaveatVerifier
 
+import net.schmizz.sshj.SSHClient
+
 case class IssueRequest(userId: String, expirationDate: String)
+case class Login(userId: String, password: String)
 
 class Application extends Controller {
 
@@ -110,11 +113,17 @@ class Application extends Controller {
   }
 
   def index = Action {
-    val stats = ordererAgentSet.map( userKey =>
+    val statsUserSum = ordererAgentSet.map( userKey =>
       userKey -> analysisView.filter(_._1 == userKey).map(_._6).sum
     ).toMap
 
-    Ok(views.html.main("Accounting")(head.size, stats))
+    val statsEventSum = analysisView.foldLeft(Map[String, Double]()) { (acc, next) =>
+      val event = next._4
+      val unit = next._6
+      acc ++ Map(event -> (acc.getOrElse(event, 0.0) + unit))
+    }
+
+    Ok(views.html.main("Accounting")(head.size, statsUserSum, statsEventSum))
   }
 
   val issuingForm = Form(
@@ -122,6 +131,13 @@ class Application extends Controller {
       "userId" -> text,
       "expirationDate" -> text
     )(IssueRequest.apply)(IssueRequest.unapply)
+  )
+
+  val loginForm = Form(
+    mapping(
+      "userId" -> text,
+      "password" -> text
+    )(Login.apply)(Login.unapply)
   )
 
   def issuing = Action {
@@ -136,6 +152,27 @@ class Application extends Controller {
       .add_first_party_caveat(s"time < ${issueRequest.expirationDate}")
       .getMacaroon
     Ok(macaroon.serialize)
+  }
+
+  def login = Action {
+    Ok(views.html.login(loginForm))
+  }
+
+  def loginResult = Action { implicit request =>
+    val login = loginForm.bindFromRequest.get
+    val ssh = new SSHClient
+    ssh.loadKnownHosts
+    ssh.connect("leo-201")
+    try {
+      ssh.authPassword(login.userId, login.password)
+      ssh.close
+      Ok(s"You are truly a ${login.userId}")
+    } catch {
+      case auth: net.schmizz.sshj.userauth.UserAuthException => {
+        ssh.close
+        Ok("Not okay")
+      }
+    }
   }
 
 }

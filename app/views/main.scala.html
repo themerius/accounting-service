@@ -1,4 +1,4 @@
-@(title: String)(content: Int, stats: Map[String, Any])
+@(title: String)(content: Int, statsUser: Map[String, Any], statsEvent: Map[String, Any])
 
 <!DOCTYPE html>
 
@@ -11,8 +11,15 @@
     </head>
     <body>
         <h1>Current data</h1>
+        <h2>Fanned out per User</h2>
         <ul>
-        @stats.map { stat =>
+        @statsUser.map { stat =>
+          <li>@stat._1: @{"%.2f".format(stat._2)} €</li>
+        }
+        </ul>
+        <h2>Fanned out per Event</h2>
+        <ul>
+        @statsEvent.map { stat =>
           <li>@stat._1: @{"%.2f".format(stat._2)} €</li>
         }
         </ul>
